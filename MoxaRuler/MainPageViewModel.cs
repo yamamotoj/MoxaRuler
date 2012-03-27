@@ -47,6 +47,7 @@ namespace MoxaRuler
         private BitmapSource _scopeImage;
         private bool _isScopeEnabled;
 
+
         public bool IsScopeEnabled { get { return _isScopeEnabled; } set { trySet("IsScopeEnabled", ref _isScopeEnabled, value); } }
         public double X { get { return _x; } set { trySet("X", ref _x, value); } }
         public double Y { get { return _y; } set { trySet("Y", ref _y, value); } }
