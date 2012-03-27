@@ -1,0 +1,179 @@
+﻿<Window x:Class="MoxaRuler.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l ="clr-namespace:MoxaRuler"
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True"
+        Width="2000"
+        Height="2000"
+        ResizeMode="NoResize"
+        Topmost="True"
+        Title="moxa ruler"
+        >
+    <Window.Resources>
+        <l:ColorTextComverter x:Key="colorTextConverter" />
+        <l:BackgroundColorConverter x:Key="backgroundColorConverter" />
+
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontFamily" Value="Consolas" />
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style TargetType="Grid">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <ImageBrush x:Key="scopeImageBrash" ImageSource="{Binding ScopeImage}" />
+        <ImageBrush x:Key="pullButtonBrash" ImageSource="Resources/pull_button.png" />
+        <ImageBrush x:Key="backgroundImage" ImageSource="Resources/button-3700.png" />
+        <SolidColorBrush x:Key="backgroundColorBrash" Color="{Binding Color, Converter={StaticResource backgroundColorConverter}}" />
+        <SolidColorBrush x:Key="bindingColorBrash" Color="{Binding Color}" />
+
+        <Style TargetType="Panel" x:Key="contentStyle">
+            <Setter Property="Background" Value="{StaticResource backgroundImage}" />
+            <Setter Property="Margin" Value="1"/>
+        </Style>
+
+        <Style TargetType="Thumb" x:Key="pullButtonStyle">
+            <Style.Triggers>
+                
+                <DataTrigger Binding="{Binding IsScopeEnabled}" Value="True">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Canvas>
+                                    <Polygon Points="0,0 0,75 75,0" Fill="OrangeRed" />
+                                    <Ellipse Width="150" Height="150" Fill="{StaticResource scopeImageBrash}" Stroke="OrangeRed" StrokeThickness="3"/>
+                                </Canvas>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsScopeEnabled}" Value="False">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Canvas>
+                                    <Polygon Points="0,0 0,10 10,0" Fill="OrangeRed" />
+                                    <Ellipse Width="20" Height="20" Fill="OrangeRed" />
+                                </Canvas>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+
+
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="Button" x:Key="endDragButtonStyle">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Canvas>
+                            <Polygon Points="0,-15 -15,0 0,0" Fill="OrangeRed" />
+                        </Canvas>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Button" x:Key="closeButtonStyle">
+            <Setter Property="Width" Value="9" />
+            <Setter Property="Height" Value="9" />
+            <Setter Property="Margin" Value="4,6,6,3" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Image Source="Resources/ico_xmark3b16.gif"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style TargetType="CheckBox" x:Key="scopeEnabledButtonStyle">
+            <Setter Property="Width" Value="16" />
+            <Setter Property="Height" Value="16" />
+            <Setter Property="Margin" Value="2" />
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Image Source="Resources/ico_scope.gif"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="False">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Image Source="Resources/ico_scope_b.gif"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="Canvas" x:Key="scopeCanvasStyle">
+            <Setter Property="Visibility" Value="{Binding IsScopeEnabled}" />
+            <Setter Property="Width" Value="150" />
+            <Setter Property="Height" Value="150" />
+            <Setter Property="Background" Value="{StaticResource scopeImageBrash}" />
+        </Style>
+    </Window.Resources>
+
+    <Grid x:Name="LayoutRoot" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <DockPanel Name="Contents" Grid.Row="0" Grid.Column="0"  Style="{StaticResource contentStyle}">
+            <StackPanel DockPanel.Dock="Left" VerticalAlignment="Center" Orientation="Vertical" Width="70">
+                <TextBlock HorizontalAlignment="Right" Text="{Binding X, StringFormat='0.0 px'}"></TextBlock>
+                <TextBlock HorizontalAlignment="Right" Text="{Binding Y, StringFormat='0.0 px'}"></TextBlock>
+                <TextBlock HorizontalAlignment="Right" Text="{Binding PixelWidth, StringFormat='0 pixel'}"></TextBlock>
+                <TextBlock HorizontalAlignment="Right" Text="{Binding PixelHeight, StringFormat='0 pixel'}"></TextBlock>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Right" Orientation="Vertical" VerticalAlignment="Top">
+                <Button Style="{StaticResource closeButtonStyle}" Command="{Binding CloseCommand}" />
+            </StackPanel>
+            <TextBlock DockPanel.Dock="Bottom" HorizontalAlignment="Center" Text="{Binding Path=Color, Converter={StaticResource colorTextConverter}}" VerticalAlignment="Center"></TextBlock>
+            <Rectangle DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Center" Name="Rect" Width="40" Height="30" Fill="{StaticResource bindingColorBrash}" />
+
+        </DockPanel>
+
+        <Button Name="DragEndButton" Grid.Row="0" Grid.Column="0" Style="{StaticResource endDragButtonStyle}" Click="DragEndButton_Click" />
+
+        <Canvas  Grid.Column="1" Grid.Row="1" Name="CapturedCanvas" Width="{Binding Path=X}" Height="{Binding Path=Y}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0" MouseDown="CapturedCanvas_MouseDown" MaxHeight="3000" MaxWidth="3000">
+            <Rectangle Stroke="White" Width="{Binding ElementName=CapturedCanvas, Path=Width}" Height="{Binding ElementName=CapturedCanvas, Path=Height}" />
+            <Rectangle Stroke="Black" StrokeDashArray="2,2" Width="{Binding ElementName=CapturedCanvas, Path=Width}" Height="{Binding ElementName=CapturedCanvas, Path=Height}" />
+        </Canvas>
+ 
+        <Thumb Grid.Row="2" Name="DragStartButton" Grid.Column="2" Style="{StaticResource pullButtonStyle}" 
+               DragStarted="DragStartButton_DragStarted" 
+               DragCompleted="DragStartButton_DragCompleted" 
+               DragDelta="DragStartButton_DragDelta"
+               MouseDoubleClick="DragStartButton_MouseDoubleClick">
+            <Thumb.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Name="ScreenShot" Header="Copy screen shot" Click="ScreenShot_Click"/>
+
+                </ContextMenu>
+            </Thumb.ContextMenu>
+        </Thumb>
+    </Grid>
+</Window>
